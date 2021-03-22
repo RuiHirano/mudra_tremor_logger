@@ -4,11 +4,15 @@ import MudraAndroidSDK.Mudra
 import MudraAndroidSDK.Mudra.*
 import android.content.res.Resources
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.SurfaceView
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import java.io.File
+import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
     private var mMudra: Mudra? = null
@@ -26,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     private var mPressureText: TextView? = null
     private var mQuaternionText: TextView? = null
     private var mAirMouseText: TextView? = null
+    private var mRecordButton: Button? = null
+    private var mLogger: Logger? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,12 +47,53 @@ class MainActivity : AppCompatActivity() {
         mQuaternionText = findViewById(R.id.quaternionText) as TextView
         mAirMouseText = findViewById(R.id.airMouseText) as TextView
 
+        val path =
+           this.getPackageName().toString() + "/files/sample.txt"
+        mLogger = Logger(10000, path)
+
         val pressureSurface = findViewById(R.id.pressure_visualizer) as SurfaceView
         mPressureVisualizer = WaveVisualizer(this, pressureSurface)
         val quaternionSurface = findViewById(R.id.quaternion_visualizer) as SurfaceView
         mQuaternionVisualizer = WaveVisualizer(this, quaternionSurface)
         val airMouseSurface = findViewById(R.id.air_mouse_visualizer) as SurfaceView
         mAirMouseVisualizer = WaveVisualizer(this, airMouseSurface)
+
+        // button
+        mRecordButton = findViewById(R.id.record_button) as Button
+        mRecordButton?.setOnClickListener{view ->
+            var isStart = this.mLogger?.getStatus()
+            if(isStart != null && isStart){
+                this.mLogger?.stop()
+                this.mRecordButton?.text = "Start Record"
+                val path =
+                    "/data/data/" + this.getPackageName().toString() + "/files/sample.txt"
+                val fileName = "testfile.txt"
+                val str = "abcdefg...."
+                val filename = "my_file"
+                val filedata = "My string data"
+                val saveFile = File(filename)
+
+                val outputStream = FileOutputStream(saveFile)
+                outputStream.write(filedata)
+                outputStream.close()
+                File(applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName).writer().use {
+                    it.write(str)
+
+                }
+                AlertDialog.Builder(this) // FragmentではActivityを取得して生成
+                    .setTitle("レコード終了")
+                    .setMessage("${path}に保存しました")
+                    .setPositiveButton("OK", { dialog, which ->
+                        // TODO:Yesが押された時の挙動
+                    })
+                    .show()
+            }else{
+                this.mLogger?.start()
+                this.mRecordButton?.text = "Stop Record"
+
+            }
+        }
+
 
     }
 

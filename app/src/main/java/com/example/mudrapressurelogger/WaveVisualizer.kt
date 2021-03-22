@@ -30,7 +30,7 @@ class WaveVisualizer : SurfaceView, SurfaceHolder.Callback, Runnable {
         _holder.addCallback(this)
 
         // Logger: 値を保持する
-        _logger = Logger(10000)
+        _logger = Logger(10000, "")
 
         // 線の太さ、アンチエイリアス、色、とか
         _paint.strokeWidth  = 2f

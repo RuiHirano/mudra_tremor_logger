@@ -7,12 +7,12 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/pressureText"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="20dp"
-        android:text="Pressure: "
-        />
+    android:id="@+id/pressureText"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:layout_marginTop="20dp"
+    android:text="Pressure: "
+    />
     <SurfaceView
         android:id="@+id/pressure_visualizer"
         android:layout_width="match_parent"
@@ -45,6 +45,13 @@
         android:id="@+id/air_mouse_visualizer"
         android:layout_width="match_parent"
         android:layout_height="150dp"
+        />
+
+    <Button
+        android:id="@+id/record_button"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Start Record"
         />
 
 </LinearLayout>
